@@ -26,21 +26,23 @@ function App() {
   const clickHandler = (event) => {
     event.preventDefault();
     // console.log(event.target.attributes.href.value);
-    fetch('http://localhost:8000/?path=' + event.target.attributes.href.value)
+    //  fetch('http://localhost:8000/?path=' + event.target.attributes.href.value)
+    fetch('https://633e73820dbc3309f3b5d032.mockapi.io/file_manager/')
       .then((res) => res.json())
       .then(
         (result) => {
-          let linkArr = result.path.split('/');
+          let linkArr = result[0].path.split('/');
           console.log(linkArr);
           linkArr.pop();
           setParent(linkArr.join('/'));
           setData(result);
         },
         (error) => {}
-      );
+      )
+      .finally(() => {});
   };
 
-  // console.log(data[0].files);
+  loading && console.log(data[0]);
 
   return (
     <div className="file-manager">

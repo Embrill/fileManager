@@ -72,13 +72,17 @@ function App() {
   // Удаление файлов
   const onClickRemoveFile = (e, idFile) => {
     e.preventDefault();
-    // const updateData = [...filterData];
-    // updateData.splice(filterData.indexOf(idFile), 1);
-    // setData(updateData);
+    const updateData = [...filterData];
+    console.log(updateData[idFile].path);
+    delete updateData[idFile].path; // Удаление пути
+    // updateData[idFile].path = 'delete'; // Или переименование пути
+    setData([...data]);
   };
 
+  console.log('Массив изначальный:', data);
+
   console.log(
-    'Массив:',
+    'Массив офильтрован:',
     data.filter((x) => x.path === path)
   );
 

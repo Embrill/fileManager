@@ -19,10 +19,24 @@ a {
 }
 
 .folder-list li {
- padding: 5px;
- margin-bottom: 5px;
+  padding: 5px;
+  margin-bottom: 5px;
+  /* text-align: left; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  svg {
+    width: 20px;
+    height: auto;
+    cursor: pointer;
+  }
 }
 
+.folder-list {
+  .file {
+  }
+}
 
 ul.folder-list li:nth-child(odd) {
   background-color: #f2f2f2;

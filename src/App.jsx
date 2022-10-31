@@ -11,6 +11,7 @@ function App() {
       dir: true,
       size: 0,
     },
+
     {
       name: 'somefolder',
       path: '/movies',
@@ -47,6 +48,12 @@ function App() {
       dir: false,
       size: 2952,
     },
+    {
+      name: 'works.txt',
+      path: '',
+      dir: false,
+      size: 2952,
+    },
   ]);
   const [path, setPath] = useState('');
   // Отфильтрованный массив по пути
@@ -79,21 +86,32 @@ function App() {
     setData([...data]);
   };
 
+  // Добавление файлов дропом
+  const onDragAddFile = (e) => {
+    console.log('Новый файл', e.target.files[0].name);
+    const newFile = e.target.files[0];
+    newFile.path = path;
+    const updatedList = [...data, newFile];
+    setData(updatedList);
+    // Доделать возможность добавления файлов с одинаковым именем
+  };
+
   console.log('Массив изначальный:', data);
 
   console.log(
-    'Массив офильтрован:',
+    'Массив отфильтрован:',
     data.filter((x) => x.path === path)
   );
 
   return (
     <div className="file-manager">
+      <input type="file" value="" onClick={(e) => e.preventDefault()} onChange={onDragAddFile} />
       {/* Arrow UP */}
-      <div>
-        <a href="/" onClick={clickHandlerArrowUp}>
-          <span className="material-icons">&#xe5d8;</span>
-          LEVEL UP
-        </a>
+      <div className="level-up">
+        <div className="level-up__body" onClick={clickHandlerArrowUp}>
+          <span className="level-up__icon material-icons">&#xe5d8;</span>
+          <span className="level-up__text">LEVEL UP</span>
+        </div>
       </div>
       {/* /path */}
       <div className="current-level">path: {path}</div>
@@ -102,11 +120,12 @@ function App() {
         {filterData.map((item, index) => {
           if (item.dir) {
             return (
-              <li className="folder" key={item.name}>
-                <a href="/" onClick={(e) => clickHandlerFolder(e, index)}>
-                  <span className="material-icons">&#xe2c7;</span>
-                  {item.name.toUpperCase()}
-                </a>
+              <li className="folder" key={index}>
+                <span className="material-icons" onClick={(e) => clickHandlerFolder(e, index)}>
+                  &#xe2c7;
+                </span>
+                {item.name.toUpperCase()}
+
                 <a href="/" onClick={(e) => onClickRemoveFile(e, index)}>
                   <svg id="Icons" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <defs>
@@ -128,10 +147,9 @@ function App() {
             // Файлы
             return (
               <li key={item.name} className="file">
-                <div>
-                  <span className="material-icons">&#xe873;</span>
-                  <span>{item.name}</span>
-                </div>
+                <span className="material-icons">&#xe873;</span>
+                <span>{item.name}</span>
+
                 <a href="/" onClick={(e) => onClickRemoveFile(e, index)}>
                   <svg id="Icons" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <defs>

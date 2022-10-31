@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid'; // Уникальыне ID
 
 import './App.scss';
 
@@ -63,7 +62,6 @@ function App() {
   // Отслеживание клика папок
   const clickHandlerFolder = (event, idFolder) => {
     event.preventDefault();
-
     console.log('Открыта папка:', filterData[idFolder].name);
     setPath(path + '/' + filterData[idFolder].name);
     console.log('id папки:', filterData);
@@ -89,19 +87,34 @@ function App() {
 
   // Добавление файлов дропом
   const onDragAddFile = (e) => {
-    console.log('Новый файл', e.target.files[0].name);
-    const newFile = e.target.files[0];
-    newFile.path = path;
-    const updatedList = [...data, newFile];
-    setData(updatedList);
-    // Доделать возможность добавления файлов с одинаковым именем
+    const getFile = e.target.files[0]; // Получение файла с input`a
+    getFile.path = path;
+
+    console.log('Новый файл', getFile);
+
+    const newFile = {
+      path: path,
+      name: getFile.name,
+      dir: getFile.type ? false : true, // Определение папка или нет
+    };
+
+    const checkDublicateFileName = Array.from(filterData, ({ name }) => name).includes(getFile.name);
+
+    if (checkDublicateFileName) {
+      alert('Файл/папка с таким именем уже существует');
+    } else {
+      const updatedList = [...data, newFile];
+      setData(updatedList);
+    }
   };
 
+  // Консоль
   console.log('Массив изначальный:', data);
-  console.log(
-    'Массив отфильтрован:',
-    data.filter((x) => x.path === path)
-  );
+  console.log('Массив отфильтрован:', filterData);
+  // console.log(
+  //   'Первый цикл',
+  //   Array.from(filterData, ({ name }) => name)
+  // );
 
   return (
     <div className="file-manager">

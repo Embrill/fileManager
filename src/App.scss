@@ -62,6 +62,14 @@ a {
       }
     }
 
+    svg {
+      opacity: 0.2;
+      transition: opacity 0.2s ease;
+      &:hover {
+        opacity: 1;
+      }
+    }
+
     .material-icons {
       font-size: 110px;
       cursor: pointer;

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // Уникальыне ID
 
 import './App.scss';
 
@@ -97,7 +98,6 @@ function App() {
   };
 
   console.log('Массив изначальный:', data);
-
   console.log(
     'Массив отфильтрован:',
     data.filter((x) => x.path === path)

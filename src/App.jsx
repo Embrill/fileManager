@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import './App.scss';
 
@@ -108,13 +108,64 @@ function App() {
     }
   };
 
+  const [valueInput, setValueInput] = useState('');
+  const [editMode, setEditMode] = useState(null);
+  const onClickEditName = (idFile, titleFile, e) => {
+    setEditMode(idFile);
+    setValueInput(titleFile);
+    // докрутить value
+  };
+  const onChangeValue = (e) => {
+    setValueInput(e.target.value);
+  };
+
+  const onKeyDownValue = (e) => {
+    if (e.key === 'Enter') {
+      // Старое имя файла
+      const oldFileName = filterData
+        .map((item, itemId) => {
+          if (itemId === editMode) {
+            return item.name;
+          }
+        })
+        .filter((x) => x !== undefined)[0];
+      console.log(oldFileName);
+
+      // Новое имя файла
+      const newFileName = filterData
+        .map((item, itemId) => {
+          if (itemId === editMode && valueInput.length > 0) {
+            item.name = valueInput;
+            return item;
+          }
+        })
+        .filter((x) => x !== undefined)[0].name;
+
+      const oldFileNameReg = new RegExp(oldFileName, 'g');
+
+      // Обновленные пути для data
+      const newPathForData = data
+        .map((x) => x.path)
+        .join(',')
+        .replace(oldFileNameReg, newFileName)
+        .split(',');
+
+      // Присвоение путей data
+      for (let i = 0; i < newPathForData.length; i++) {
+        data[i].path = newPathForData[i];
+      }
+      // Выход из режима редактирования
+      setEditMode(null);
+
+      // console.log(data.map((x) => x.path));
+      console.log(newFileName);
+    }
+  };
+  // Пофиксить открытие файлов и их иконки
+
   // Консоль
   console.log('Массив изначальный:', data);
   console.log('Массив отфильтрован:', filterData);
-  // console.log(
-  //   'Первый цикл',
-  //   Array.from(filterData, ({ name }) => name)
-  // );
 
   return (
     <div className="file-manager">
@@ -131,56 +182,39 @@ function App() {
       {/* Папки */}
       <ul className="folder-list">
         {filterData.map((item, index) => {
-          if (item.dir) {
-            return (
-              <li className="folder" key={index}>
-                <span className="material-icons" onClick={(e) => clickHandlerFolder(e, index)}>
-                  &#xe2c7;
-                </span>
-                {item.name.toUpperCase()}
+          return (
+            <li className={item.dir ? 'folder' : 'file'} key={index}>
+              <span className="material-icons" onClick={(e) => clickHandlerFolder(e, index)}>
+                &#xe2c7;
+              </span>
 
-                <a href="/" onClick={(e) => onClickRemoveFile(e, index)}>
-                  <svg id="Icons" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <style></style>
-                    </defs>
-                    <path
-                      className="cls-1"
-                      d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z"
-                    />
-                    <path
-                      className="cls-1"
-                      d="M16.707,7.293a1,1,0,0,0-1.414,0L12,10.586,8.707,7.293A1,1,0,1,0,7.293,8.707L10.586,12,7.293,15.293a1,1,0,1,0,1.414,1.414L12,13.414l3.293,3.293a1,1,0,0,0,1.414-1.414L13.414,12l3.293-3.293A1,1,0,0,0,16.707,7.293Z"
-                    />
-                  </svg>
-                </a>
-              </li>
-            );
-          } else {
-            // Файлы
-            return (
-              <li key={item.name} className="file">
-                <span className="material-icons">&#xe873;</span>
-                <span>{item.name}</span>
-
-                <a href="/" onClick={(e) => onClickRemoveFile(e, index)}>
-                  <svg id="Icons" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <style></style>
-                    </defs>
-                    <path
-                      className="cls-1"
-                      d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z"
-                    />
-                    <path
-                      className="cls-1"
-                      d="M16.707,7.293a1,1,0,0,0-1.414,0L12,10.586,8.707,7.293A1,1,0,1,0,7.293,8.707L10.586,12,7.293,15.293a1,1,0,1,0,1.414,1.414L12,13.414l3.293,3.293a1,1,0,0,0,1.414-1.414L13.414,12l3.293-3.293A1,1,0,0,0,16.707,7.293Z"
-                    />
-                  </svg>
-                </a>
-              </li>
-            );
-          }
+              {editMode === index ? (
+                <input
+                  value={valueInput}
+                  onKeyDown={(e) => onKeyDownValue(e, index)}
+                  onChange={(e) => onChangeValue(e)}
+                  type="text"
+                />
+              ) : (
+                <span onClick={() => onClickEditName(index, item.name)}>{item.name}</span>
+              )}
+              <a href="/" onClick={(e) => onClickRemoveFile(e, index)}>
+                <svg id="Icons" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <style></style>
+                  </defs>
+                  <path
+                    className="cls-1"
+                    d="M12,0A12,12,0,1,0,24,12,12.013,12.013,0,0,0,12,0Zm0,22A10,10,0,1,1,22,12,10.011,10.011,0,0,1,12,22Z"
+                  />
+                  <path
+                    className="cls-1"
+                    d="M16.707,7.293a1,1,0,0,0-1.414,0L12,10.586,8.707,7.293A1,1,0,1,0,7.293,8.707L10.586,12,7.293,15.293a1,1,0,1,0,1.414,1.414L12,13.414l3.293,3.293a1,1,0,0,0,1.414-1.414L13.414,12l3.293-3.293A1,1,0,0,0,16.707,7.293Z"
+                  />
+                </svg>
+              </a>
+            </li>
+          );
         })}
       </ul>
     </div>

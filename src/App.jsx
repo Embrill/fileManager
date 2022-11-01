@@ -79,6 +79,7 @@ function App() {
   const onClickRemoveFile = (e, idFile) => {
     e.preventDefault();
     const updateData = [...filterData];
+    console.log(`Файл '${updateData[idFile].name}' удален`);
     console.log(updateData[idFile].path);
     delete updateData[idFile].path; // Удаление пути
     // updateData[idFile].path = 'delete'; // Или переименование пути
@@ -90,7 +91,7 @@ function App() {
     const getFile = e.target.files[0]; // Получение файла с input`a
     getFile.path = path;
 
-    console.log('Новый файл', getFile);
+    console.log(`Новый файл '${getFile.name}' добавлен`);
 
     const newFile = {
       path: path,
@@ -164,8 +165,8 @@ function App() {
   // Пофиксить открытие файлов и их иконки
 
   // Консоль
-  console.log('Массив изначальный:', data);
-  console.log('Массив отфильтрован:', filterData);
+  // console.log('Массив изначальный:', data);
+  // console.log('Массив отфильтрован:', filterData);
 
   return (
     <div className="file-manager">
@@ -177,28 +178,34 @@ function App() {
           <span className="level-up__text">LEVEL UP</span>
         </div>
       </div>
-      {/* /path */}
-      <div className="current-level">path: {path}</div>
-      {/* Папки */}
+
+      <div className="path">path: {path}</div>
+
       <ul className="folder-list">
         {filterData.map((item, index) => {
           return (
             <li className={item.dir ? 'folder' : 'file'} key={index}>
-              <span className="material-icons" onClick={(e) => clickHandlerFolder(e, index)}>
-                &#xe2c7;
+              <span
+                className="material-icons"
+                onClick={item.dir ? (e) => clickHandlerFolder(e, index) : (e) => e.preventDefault()}
+              >
+                {item.dir ? <>&#xe2c7;</> : <>&#xe873;</>}
               </span>
 
               {editMode === index ? (
                 <input
+                  className="folder-file__edit"
                   value={valueInput}
                   onKeyDown={(e) => onKeyDownValue(e, index)}
                   onChange={(e) => onChangeValue(e)}
                   type="text"
                 />
               ) : (
-                <span onClick={() => onClickEditName(index, item.name)}>{item.name}</span>
+                <span className="folder-file__name" onClick={() => onClickEditName(index, item.name)}>
+                  {item.name}
+                </span>
               )}
-              <a href="/" onClick={(e) => onClickRemoveFile(e, index)}>
+              <a className="folder-file__remove" href="/" onClick={(e) => onClickRemoveFile(e, index)}>
                 <svg id="Icons" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <defs>
                     <style></style>

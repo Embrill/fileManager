@@ -1,0 +1,18 @@
+.level-up {
+  // .level-up__body
+  &__body {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    position: relative;
+    z-index: 200;
+  }
+  // .level-up__icon
+  &__icon {
+  }
+  // .level-up__text
+  &__text {
+    padding-top: 2px;
+  }
+}

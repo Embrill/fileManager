@@ -11,6 +11,8 @@ interface IFolderFile {
   onChangeValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClickEditName: (index: number, item: string) => void;
   onClickRemoveFile: (e: React.MouseEvent<HTMLAnchorElement>, index: number) => void;
+  setEditMode: (a: number) => void;
+  clickHandlerFile: (e: React.MouseEvent<HTMLSpanElement>) => void;
 }
 
 const FolderFile: FC<IFolderFile> = ({
@@ -22,15 +24,30 @@ const FolderFile: FC<IFolderFile> = ({
   onChangeValue,
   onClickEditName,
   onClickRemoveFile,
+  setEditMode,
+  clickHandlerFile,
 }) => {
+  // Функция закрытия попапа при клике на body
+  const sortRef = React.useRef<HTMLUListElement>(null);
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      sortRef.current && !event.composedPath().includes(sortRef.current) && setEditMode(NaN);
+    };
+    // Прослушка клика на бади с функцией handleClickOutside
+    document.body.addEventListener('click', handleClickOutside);
+    return () => {
+      document.body.removeEventListener('click', handleClickOutside);
+    };
+  }, [setEditMode]);
+
   return (
-    <ul className="folder-list">
+    <ul ref={sortRef} className="folder-list">
       {filterData.map((item: DataItem, index: number) => {
         return (
           <li className={item.dir ? 'folder' : 'file'} key={index}>
             <span
               className="material-icons"
-              onClick={item.dir ? (e) => clickHandlerFolder(index) : (e) => e.preventDefault()}
+              onClick={item.dir ? () => clickHandlerFolder(index) : (e) => clickHandlerFile(e)}
             >
               {item.dir ? <>&#xe2c7;</> : <>&#xe873;</>}
             </span>

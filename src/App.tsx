@@ -74,6 +74,13 @@ const App: FC = () => {
     console.log('Открыта папка:', filterData[idFolder].name);
     setPath(path + '/' + filterData[idFolder].name);
     console.log('id папки:', filterData);
+    setEditMode(NaN);
+  };
+
+  // Отслеживание клика по файлу
+  const clickHandlerFile = (event: React.MouseEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    setEditMode(NaN);
   };
 
   // Отслеживание клика arrowUp
@@ -190,12 +197,14 @@ const App: FC = () => {
           <FolderFile
             filterData={filterData}
             clickHandlerFolder={clickHandlerFolder}
+            clickHandlerFile={clickHandlerFile}
             editMode={editMode}
             valueInput={valueInput}
             onKeyDownValue={onKeyDownValue}
             onChangeValue={onChangeValue}
             onClickEditName={onClickEditName}
             onClickRemoveFile={onClickRemoveFile}
+            setEditMode={setEditMode}
           />
           <input type="file" value="" onClick={(e) => e.preventDefault()} onChange={(e) => onDragAddFile(e)} />
         </main>

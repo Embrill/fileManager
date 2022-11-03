@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { FC } from 'react';
+import { DataItem } from '../../App';
 import './folder-file.scss';
 
-const FolderFile = ({
+interface IFolderFile {
+  filterData: DataItem[];
+  clickHandlerFolder: (index: number) => void;
+  editMode: number;
+  valueInput: string;
+  onKeyDownValue: (e: React.KeyboardEvent<HTMLInputElement>, index: number) => void;
+  onChangeValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClickEditName: (index: number, item: string) => void;
+  onClickRemoveFile: (e: React.MouseEvent<HTMLAnchorElement>, index: number) => void;
+}
+
+const FolderFile: FC<IFolderFile> = ({
   filterData,
   clickHandlerFolder,
   editMode,
@@ -13,12 +25,12 @@ const FolderFile = ({
 }) => {
   return (
     <ul className="folder-list">
-      {filterData.map((item, index) => {
+      {filterData.map((item: DataItem, index: number) => {
         return (
           <li className={item.dir ? 'folder' : 'file'} key={index}>
             <span
               className="material-icons"
-              onClick={item.dir ? (e) => clickHandlerFolder(e, index) : (e) => e.preventDefault()}
+              onClick={item.dir ? (e) => clickHandlerFolder(index) : (e) => e.preventDefault()}
             >
               {item.dir ? <>&#xe2c7;</> : <>&#xe873;</>}
             </span>
@@ -30,6 +42,7 @@ const FolderFile = ({
                 onKeyDown={(e) => onKeyDownValue(e, index)}
                 onChange={(e) => onChangeValue(e)}
                 type="text"
+                autoFocus
               />
             ) : (
               <span className="folder-file__name" onClick={() => onClickEditName(index, item.name)}>

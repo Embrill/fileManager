@@ -1,7 +1,12 @@
 import React from 'react';
+import { FC } from 'react';
 import './path.scss';
 
-const Path = ({ path }) => {
+interface IPath {
+  path: string;
+}
+
+const Path: FC<IPath> = ({ path }) => {
   return <div className="path">path: {path}</div>;
 };
 

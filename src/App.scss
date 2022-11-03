@@ -8,21 +8,32 @@
 }
 
 .file-manager {
-  width: 500px;
-  padding: 10px;
-  margin: 20px auto;
-  border: 1px solid rgb(128, 128, 128);
-  position: relative;
-  z-index: 1000;
+  // max-width: 500px;
+  padding: 20px;
+  // margin: 20px auto;
+  // border: 1px solid rgb(128, 128, 128);
 
-  input {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    z-index: 10;
+  &__container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 0 20px;
+
+    border-radius: 20px;
+    background: #e0e0e049;
+    box-shadow: 5px 5px 15px #c7c7c7, -5px -5px 15px #f9f9f9;
+
+    position: relative;
+    z-index: 1000;
+
+    input {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      z-index: 10;
+    }
   }
 }
 

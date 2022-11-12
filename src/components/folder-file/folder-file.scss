@@ -55,19 +55,26 @@
     }
 
     input {
-      position: static;
-
-      // width: 100%;
+      position: relative;
       height: 13px;
-      // height: 30%;
       opacity: 1;
       font-size: 16px;
       text-align: center;
+      z-index: 100;
     }
 
     .material-icons {
       font-size: 110px;
       cursor: pointer;
+    }
+
+    .folder-file__input-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 60;
     }
   }
 

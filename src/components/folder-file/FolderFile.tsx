@@ -27,40 +27,30 @@ const FolderFile: FC<IFolderFile> = ({
   setEditMode,
   clickHandlerFile,
 }) => {
-  // Функция закрытия попапа при клике на body
-  const sortRef = React.useRef<HTMLUListElement>(null);
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      sortRef.current && !event.composedPath().includes(sortRef.current) && setEditMode(NaN);
-    };
-    // Прослушка клика на бади с функцией handleClickOutside
-    document.body.addEventListener('click', handleClickOutside);
-    return () => {
-      document.body.removeEventListener('click', handleClickOutside);
-    };
-  }, [setEditMode]);
-
   return (
-    <ul ref={sortRef} className="folder-list">
+    <ul className="folder-list">
       {filterData.map((item: DataItem, index: number) => {
         return (
           <li className={item.dir ? 'folder' : 'file'} key={index}>
             <span
               className="material-icons"
-              onClick={item.dir ? () => clickHandlerFolder(index) : (e) => clickHandlerFile(e)}
+              onDoubleClick={item.dir ? () => clickHandlerFolder(index) : (e) => clickHandlerFile(e)}
             >
               {item.dir ? <>&#xe2c7;</> : <>&#xe873;</>}
             </span>
 
             {editMode === index ? (
-              <input
-                className="folder-file__edit"
-                value={valueInput}
-                onKeyDown={(e) => onKeyDownValue(e, index)}
-                onChange={(e) => onChangeValue(e)}
-                type="text"
-                autoFocus
-              />
+              <>
+                <input
+                  className="folder-file__edit"
+                  value={valueInput}
+                  onKeyDown={(e) => onKeyDownValue(e, index)}
+                  onChange={(e) => onChangeValue(e)}
+                  type="text"
+                  autoFocus
+                />
+                <div className="folder-file__input-bg" onClick={() => setEditMode(NaN)}></div>
+              </>
             ) : (
               <span className="folder-file__name" onClick={() => onClickEditName(index, item.name)}>
                 {item.name}
